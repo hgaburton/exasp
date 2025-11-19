@@ -1,0 +1,271 @@
+#-----------------------------------------------------------
+# Hubbard dimer simulation using IBM Quantum backend     
+# 2025-11-19 11:54:39
+#-----------------------------------------------------------
+# Total evolution time     = 20.0
+# Time step                = 1.0
+# Number of steps          = 20
+# Maximum photon frequency = 9.65685
+# Maximum photon coupling  = 1.0
+# Number of shots          = 10000
+# Noiseless                = True
+# Hardware                 = False
+# Measure path             = True
+# Number of repeats        = 1
+# SinNPath(wmax=9.65685, lmax=1.0, order=3)
+#-----------------------------------------------------------
+# Hubbard dimer parameters:
+# U = 4.0, t = 1.0, mu = 0.5
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     0 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.0144000000  (0.022742)
+#   Postselect total energy    =              nan  (     nan)
+#                                                           
+#   Final photon number        =     1.0000000000  (0.000000)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     1 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =    -0.4000000000  (0.014676)
+#   Postselect total energy    =              nan  (     nan)
+#                                                           
+#   Final photon number        =     1.0000000000  (0.000000)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     2 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     2.1260000000  (0.020835)
+#   Postselect total energy    =     3.0000000000  (0.612372)
+#                                                           
+#   Final photon number        =     0.9996500000  (0.000132)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     3 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     0.7832000000  (0.016465)
+#   Postselect total energy    =     4.4444444444  (0.324999)
+#                                                           
+#   Final photon number        =     0.9983500000  (0.000287)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     4 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     0.8620000000  (0.020298)
+#   Postselect total energy    =     3.8333333333  (0.108729)
+#                                                           
+#   Final photon number        =     0.9828000000  (0.000919)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     5 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     1.8946000000  (0.022326)
+#   Postselect total energy    =     3.9929660023  (0.048421)
+#                                                           
+#   Final photon number        =     0.9153500000  (0.001968)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     6 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     0.1618000000  (0.021190)
+#   Postselect total energy    =     4.0026143791  (0.051131)
+#                                                           
+#   Final photon number        =     0.9244500000  (0.001869)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     7 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     1.4826000000  (0.024310)
+#   Postselect total energy    =     4.0584795322  (0.022541)
+#                                                           
+#   Final photon number        =     0.6129500000  (0.003444)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     8 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     2.4830000000  (0.023078)
+#   Postselect total energy    =     4.0267809320  (0.032727)
+#                                                           
+#   Final photon number        =     0.8151000000  (0.002745)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after     9 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =    -0.6276000000  (0.019090)
+#   Postselect total energy    =     3.8584070796  (0.093836)
+#                                                           
+#   Final photon number        =     0.9772000000  (0.001055)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    10 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     2.6072000000  (0.024009)
+#   Postselect total energy    =     3.9553752535  (0.018382)
+#                                                           
+#   Final photon number        =     0.4085500000  (0.003476)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    11 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.7508000000  (0.020327)
+#   Postselect total energy    =     4.0514096186  (0.028786)
+#                                                           
+#   Final photon number        =     0.7539000000  (0.003046)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    12 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     0.5464000000  (0.022361)
+#   Postselect total energy    =     3.8225806452  (0.089449)
+#                                                           
+#   Final photon number        =     0.9738000000  (0.001129)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    13 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     0.7962000000  (0.023448)
+#   Postselect total energy    =     4.0658040665  (0.027177)
+#                                                           
+#   Final photon number        =     0.7325000000  (0.003130)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    14 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.0388000000  (0.023577)
+#   Postselect total energy    =     4.0033222591  (0.018227)
+#                                                           
+#   Final photon number        =     0.3978500000  (0.003461)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    15 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.5410000000  (0.019499)
+#   Postselect total energy    =     3.9958672663  (0.015592)
+#                                                           
+#   Final photon number        =     0.1731000000  (0.002675)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    16 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     4.0008000000  (0.014282)
+#   Postselect total energy    =     3.9907370117  (0.014190)
+#                                                           
+#   Final photon number        =     0.0071000000  (0.000594)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    17 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.9704000000  (0.014309)
+#   Postselect total energy    =     3.9844676068  (0.014295)
+#                                                           
+#   Final photon number        =     0.0225500000  (0.001050)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    18 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.9608000000  (0.015429)
+#   Postselect total energy    =     3.9962871287  (0.014362)
+#                                                           
+#   Final photon number        =     0.0335000000  (0.001272)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    19 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     3.8944000000  (0.014840)
+#   Postselect total energy    =     3.9962832955  (0.014370)
+#                                                           
+#   Final photon number        =     0.0309000000  (0.001224)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
+
+#-----------------------------------------------------------
+# Final circuit output after    20 steps:               
+#-----------------------------------------------------------
+#   Electron total energy      =     4.0058000000  (0.014714)
+#   Postselect total energy    =     4.0076108197  (0.014342)
+#                                                           
+#   Final photon number        =     0.0285000000  (0.001177)
+#                                                           
+#   Thermal state energy       =     2.0000000000     
+#   Thermal state photon num   =     0.5000000000              
+#-----------------------------------------------------------
