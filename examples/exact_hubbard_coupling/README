@@ -1,0 +1,1 @@
+python ../../exasp/exact_hubbard_coupling.py -U 4 -dim 2,1,1 -nelec 1,1 -lmax 1 -wmax 8 --nphoton 1 -pol 1,0,0
