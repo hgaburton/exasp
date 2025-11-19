@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+""" Module for converting Fermionic Hamiltonian into corresponding
+qubit Hamiltonian and generating the relevant EXASP (Trotterised)
+time-evolution operators. """
 import numpy as np
 from qiskit_nature.second_q.hamiltonians import ElectronicEnergy
 from qiskit_nature.second_q.mappers import JordanWignerMapper
@@ -15,6 +17,14 @@ from qiskit_ibm_runtime.fake_provider import FakeManilaV2
 from qiskit.circuit import QuantumCircuit
 
 def get_2nd_quant_hamiltonian(mo_ints, nbasis, eps):
+    """ Construct 2nd quantised Hamiltonian from Quantel integrals
+
+    Args:
+        mo_ints: Quantel integral object
+        nbasis:  number of spatial orbitals
+        eps:     polarization vector (3 elements)
+    """
+    # Extract 1- and 2-body integrals
     h1a = mo_ints.oei_matrix(True)
     h2aa_init = mo_ints.tei_array(True, False)
     h2aa = np.ndarray(h2aa_init.shape)
@@ -23,25 +33,47 @@ def get_2nd_quant_hamiltonian(mo_ints, nbasis, eps):
             for k in range(nbasis):
                 for l in range(nbasis):
                     h2aa[i,j,k,l] = h2aa_init[i,j,l,k]
+
+    # For RHF, set all other components to None
     h1b = None
     h2bb = None
     h2ba = None
+
+    # Generate Qiskit Hamiltonian
     hamil = ElectronicEnergy.from_raw_integrals(h1a, h2aa, h1b, h2bb, h2ba, auto_index_order=False)
     hamil.electronic_integrals.alpha += PolynomialTensor({"": mo_ints.scalar_potential()})
+
+    # Extract dipole integrals
     d1a = mo_ints.dipole_matrix(True)
     d1a = np.einsum('x,xpq->pq', eps, d1a)
     d2aa = None
+
+    # Generate Qiskit Dipole Hamiltonian
     dipole_hamil = ElectronicEnergy.from_raw_integrals(d1a, d2aa, h1b, h2bb, h2ba,
                                                        auto_index_order=False)
     return hamil, dipole_hamil
 
 def get_qubit_hamiltonian(hmat, dip_hmat):
+    """Convert fermionic Hamiltonians to qubit by JW mapping
+
+    Args:
+        hmat: fermionic Hamiltonian
+        dip_hmat: fermionic dipole operator
+    """
     jw_mapper = JordanWignerMapper()
     hmat_q = jw_mapper.map(hmat.second_q_op())
     dip_hmat_q = jw_mapper.map(dip_hmat.second_q_op())
     return hmat_q, dip_hmat_q
 
 def coupling_hamil_terms(hmat, dip_hmat, dse = True):
+    """Generate terms of the system-photon coupling Hamiltonian
+
+    Args:
+        hmat: qubit system Hamiltonian
+        dip_hmat: qubit dipole operator
+        dse:      include dipole self-interaction (True) or not (False). [Default=True]
+    """
+
     phot_hmat = SparsePauliOp(['I', 'Z'], coeffs=[0.5, - 0.5])
     phot_x = SparsePauliOp('X')
     Hm_c = (SparsePauliOp('I').tensor(hmat)).simplify()
@@ -55,6 +87,13 @@ def coupling_hamil_terms(hmat, dip_hmat, dse = True):
     return Hm_c, Hp_c, Hi_c, Hd_c
 
 def coupling_hamil_terms_3qub_hub(U, delta):
+    """Generate terms of the system-photon coupling Hamiltonian
+    for the 3-qubit representation of the 2-site Hubbard lattice.
+
+    Args:
+        U: Hubbard U parameter
+        delta: dipole strength parameter
+    """
     hmat_q = SparsePauliOp(['II', 'ZZ', 'XI', 'IX'], coeffs=[U/2, U/2, -1, -1])
     hmat_e = SparsePauliOp(['III', 'ZZI', 'XII', 'IXI'], coeffs=[U/2, U/2, -1, -1])
     hmat_p = SparsePauliOp(['III', 'IIZ'], coeffs = [0.5,-0.5])
@@ -63,27 +102,50 @@ def coupling_hamil_terms_3qub_hub(U, delta):
     return hmat_q, hmat_e, hmat_p, hmat_imu, hmat_d
 
 def get_coupled_hamil(h,w,l):
+    """Construct coupled Hamiltonian
+
+    Args:
+        h: list of Hamiltonian terms
+        w: photon frequency
+        l: coupling strength
+    """
     hamiltonian = h[0] + w * h[1] + l * np.sqrt(0.5 * w) * h[2] + 0.5 * l ** 2 * h[3]
     return hamiltonian.simplify()
 
-def trotter_evolve(Hk, vk, dt, circuit_file=None,order=1):
+def trotter_evolve(Hk, vk, dt, order=1):
+    """Perform Trotterized time evolution under the EXASP Hamiltonian.
+
+    Args:
+        Hk: EXASP Hamiltonian
+        vk: current state
+        dt: time step
+        order: Trotter expansion order
+    """
+
     if order not in (1,2):
         raise ValueError(f"Invalid Trotter order {order} requested")
     pf = SuzukiTrotter(2) if order==2 else LieTrotter()
     problem = TimeEvolutionProblem(Hk, initial_state=vk, time=dt)
     trotter = TrotterQRTE(product_formula=pf,num_timesteps=1)
     result = trotter.evolve(problem)
-    if circuit_file is not None:
-        print('Trotter step operations: ', result.evolved_state.decompose(reps=2).decompose("disentangler_dg").decompose(
-       "multiplex1_reverse_dg").count_ops())
-        print('Trotter step depth ', result.evolved_state.decompose(reps=2).decompose("disentangler_dg").decompose(
-       "multiplex1_reverse_dg").depth())
-        result.evolved_state.decompose(reps=2).decompose("disentangler_dg").decompose(
-     "multiplex1_reverse_dg").draw(output='mpl', filename = circuit_file) 
     vk = Statevector(result.evolved_state)
     return vk
 
 def  trotter_evolve_noisy_dm(path, nsteps, nqubits, hamil_terms, dt, vk, order=1):
+    """Perform Trotterized time evolution under the EXASP Hamiltonian
+    with simulated device noise. UNTESTED.
+
+    Args:
+        path: EXASP adiabatic pathway descriptor, containing photon frequency
+            w and coupling l
+        nsteps: number of evolution steps
+        nqubits: number of qubits
+        hamil_terms: qubit operators corresponding to different contributions
+            to coupled Hamiltonian 
+        dt: time step
+        vk: current state
+        order: Trotter expansion order
+    """
     if order not in (1,2):
         raise ValueError(f"Invalid Trotter order {order} requested")
     pf = SuzukiTrotter(2) if order==2 else LieTrotter()

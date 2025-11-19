@@ -30,9 +30,9 @@ example inputs and outputs can be found in `./examples/`.
 The functionality of each script is as follows:
 
 1. `exact_coupling.py`:  
-Compute exact eigenstates for molecular system along EXASP adiabatic pathway.
+Compute exact eigenstates for a molecular system along EXASP adiabatic pathway.
 3. `exact_hubbard_coupling.py`:  
-Compute exact eigenstates for Hubbard lattice along EXASP adiabatic pathway.
+Compute exact eigenstates for a Hubbard lattice along EXASP adiabatic pathway.
 4. `exact_time_evolution.py`:  
 Perform exact EXASP time propagation for a molecular system analytically.
 5. `quantum_time_evolution.py`:  
@@ -41,10 +41,10 @@ Perform exact or Trotterised EXASP time propagation for a molecular system.
 Perform exact or Trotterised EXASP time propagation for a Hubbard lattice.
 9. `twolevel_ibm.py`:  
 Perform quantum circuit simulation for EXASP time propagation for a two-level model
-Hamiltonian using noiseless statevector simulations, noisy simulations, or on real quantum hardware
+Hamiltonian using noiseless statevector simulations, noisy simulations, or on real quantum hardware.
 11. `hubbard_dimer_ibm.py`:  
 Perform quantum circuit simulation for EXASP time propagation for the Hubbard dimer
-using noiseless statevector simulations, noisy simulations, or on real quantum hardware
+using noiseless statevector simulations, noisy simulations, or on real quantum hardware.
 
 Running the script with the `--help` command line argument will show the options available.
 Example command line arguments and reference output files are availabe in `./examples/'.
