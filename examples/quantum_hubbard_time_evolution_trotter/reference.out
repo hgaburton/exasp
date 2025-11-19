@@ -1,7 +1,7 @@
 ##########################################################
-# Performing exact time evolution for excited-state ASP  
-# Today: 19 Nov 2025 at 22:35:41
-# Namespace(U=4.0, nelec='1,1', dim='2,1,1', lmax=1.0, wmax=8.0, eps='1,0,0', dt=0.5, T=100.0, nphoton=1, initial_state='0,1', order=3, site=True, nfrozen=0, trotter=False, noisy=False, dse=True, ref='', electronic_energy=False)
+# Performing trotterised time evolution for excited-state ASP  
+# Today: 19 Nov 2025 at 22:34:43
+# Namespace(U=4.0, nelec='1,1', dim='2,1,1', lmax=1.0, wmax=8.0, eps='1,0,0', dt=0.5, T=100.0, nphoton=1, initial_state='0,1', order=3, site=True, nfrozen=0, trotter=True, noisy=False, dse=True, ref='', electronic_energy=False)
 ##########################################################
 
 # Parameters:
@@ -20,6 +20,6 @@
 #  Number of electrons  = 1,1
 #  Dimensions           = 2,1,1
 #  Frozen core orbitals = 0
-#  Trotterised          = False
+#  Trotterised          = True
 #  Noisy simulation     = False
 # --------------------------------------------------------
