@@ -1,0 +1,1 @@
+python ../../exasp/exact_time_evolution.py -mol ch2.xyz -lmax 0.15 -wmax 0.25 --nphoton 1 -p 0,0,1 --init 1,1 -T 1000 -n 2000
