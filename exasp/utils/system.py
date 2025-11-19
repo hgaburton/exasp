@@ -1,5 +1,5 @@
+""" Module for defining systems and integrals in EXASP using Quantel"""
 import numpy as np
-import sys
 from scipy.sparse import csc_matrix
 import quantel
 from quantel.wfn.rhf import RHF
@@ -7,8 +7,20 @@ from quantel.opt.diis import DIIS
 from quantel.utils.linalg import orthogonalise
 
 class System:
+    """ Class to hold information about an electron-photon system """
     def __init__(self, nphoton, eps, nalfa, nbeta, nfrozen, nactive, mo_coeff=None, dse=True):
-        """Initialise the system"""
+        """ Initialise an electron-photon system
+            
+            Args: 
+                nphoton:  number of photon levels to include
+                eps:      polarization vector (3 elements)
+                nalfa:    number of active alpha electrons
+                nbeta:    number of active beta electrons
+                nfrozen:  number of frozen orbitals
+                nactive:  number of active orbitals
+                mo_coeff: orbital coefficients (if None, run RHF to get them)
+                dse:      include dipole self-interaction (True) or not (False). [Default=True]
+        """
         # Save parameters
         self.nphoton = nphoton
         assert(len(eps) == 3)
@@ -34,8 +46,13 @@ class System:
         # Initialise with coefficients (default is to run RHF)
         self.set_coefficients(coeff=mo_coeff)
 
+
     def set_coefficients(self,coeff=None):
-        """Set the orbital coefficients"""
+        """Set the orbital coefficients for the electronic system
+        
+            Args:
+                coeff: orbital coefficients (if None, run RHF to get them)
+        """
         if(coeff is None):
             # If no coefficients provided, run a HF calculation
             self.wfn = RHF(self.ints)
@@ -79,7 +96,11 @@ class System:
         self.Dm = np.einsum('x,xpq->pq',self.eps,self.cispace.build_Dmat())
         
     def setup_photon_matrices(self, nphoton):
-        """Setup photon matrices"""
+        """ Setup photon matrices
+         
+            Args:
+                nphoton: number of photon levels to include
+        """
         # Identity matrix
         self.Ip = np.eye(nphoton+1)
         # Raising operator
@@ -92,7 +113,7 @@ class System:
         self.Hp = self.Ap.T @ self.Ap
 
     def setup_coupling(self):
-        """Compute the coupling matrices in direct product basis"""
+        """Compute the coupling matrices in direct product basis as sparse matrices"""
         # System Hamiltonian
         self.Hm_c = csc_matrix(np.kron(self.Ip, self.Hm))
         # Photon Hamiltonian
@@ -122,9 +143,22 @@ class System:
         else:
             return dw * dHw
 
+
 class MolecularSystem(System):
+    """Class to hold information about a molecular system"""
     def __init__(self, xyz, basis, nphoton, eps, nfrozen=None, nactive=None, mo_coeff=None, dse=True):
-        """Initialise the system"""
+        """ Initialise the system
+        
+            Args:
+                xyz:       Name of .xyz file containing molecular geometry
+                basis:     basis set name
+                nphoton:   number of photon levels to include
+                eps:       polarization vector (3 elements)
+                nfrozen:   number of frozen orbitals (if None, no frozen orbitals)
+                nactive:   number of active orbitals (if None, all orbitals active)
+                mo_coeff:  orbital coefficients (if None, run RHF to get them)
+                dse:       include dipole self-interaction (True) or not (False). [Default=True]
+        """
         # Save information about molecule and basis
         self.basis = basis
         self.xyz   = xyz
@@ -145,6 +179,19 @@ class MolecularSystem(System):
 class HubbardSystem(System):
     """Class to hold information about a Hubbard model"""
     def __init__(self,U,t,nphoton, eps, ne:list, dim:list, periodic:list=[False,False,False], mo_coeff=None, dse=True):
+        """Initialise the Hubbard system
+        
+            Args:
+                U:         on-site interaction
+                t:         hopping parameter
+                nphoton:   number of photon levels to include
+                eps:       polarization vector (3 elements)
+                ne:        list with number of electrons [nalfa, nbeta]
+                dim:       list with dimensions of the lattice [nx, ny, nz]
+                periodic:  list with periodicity flags for each dimension [px, py, pz]
+                mo_coeff:  orbital coefficients (if None, run RHF to get them)
+                dse:       include dipole self-interaction (True) or not (False). [Default=True]
+        """
         # Save parameters
         self.t = t
         self.U = U

@@ -1,3 +1,4 @@
+"""Module for defining paths in EXASP parameter space"""
 import numpy as np
 
 class SinNPath:
@@ -7,8 +8,8 @@ class SinNPath:
     """
     def __init__(self,wmax,lmax,order):
         """Initialise the path
-            wmax: maximum value of omega
-            lmax: maximum value of lambda
+            wmax:  maximum value of omega
+            lmax:  maximum value of lambda
             order: power order of the sin function for lambda
         """
         self.wmax = wmax
