@@ -1,1 +1,1 @@
-python ../../exasp/quantum_hubbard_time_evolution.py -U 4  -dim 2,1,1 -nelec 1,1 -lmax 1 -wmax 8 --nphoton 1 -pol 1,0,0 -T 100 -dt 0.5
+python ../../exasp/quantum_hubbard_time_evolution.py -U 4  -dim 2,1,1 -nelec 1,1 -lmax 1 -wmax 8 --nphoton 1 -pol 1,0,0 -T 100 -dt 0.5 --site
