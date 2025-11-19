@@ -176,7 +176,13 @@ def  trotter_evolve_noisy_dm(path, nsteps, nqubits, hamil_terms, dt, vk, order=1
     return Eks, Pks
 
 class tUPSAdaptor:
+    """ Class to generate Hamiltonian and operator matrix elements for tUPS calculation"""
     def __init__(self, nmo):
+        """ Initialize the tUPSAdaptor class
+
+        Args:
+            nmo: number of spatial orbitals
+        """
         # Save the number of spatial orbitals
         self.nmo = nmo
         # Save number of qubits
@@ -187,6 +193,12 @@ class tUPSAdaptor:
         self.dim = 2 ** self.nqubit
 
     def write_hamiltonian(self, hmat_q):
+        """ Write Hamiltonian matrix to file
+
+        Args:
+            hmat_q: qubit Hamiltonian
+        """
+
         # Convert to a dense matrix
         hmat = self.jw.map(hmat_q.second_q_op()).to_matrix().real
         # Save to file
@@ -194,6 +206,13 @@ class tUPSAdaptor:
         print("\nHamiltonian matrix saved to 'ham'...")
 
     def write_reference(self,nalfa,nbeta,perfect_pairing=False):
+        """ Write reference state to file
+
+        Args:
+            nalfa: number of alpha electrons
+            nbeta: number of beta electrons
+            perfect_pairing: whether to use perfect pairing reference
+        """
         vk = Statevector(np.eye(self.dim)[:,0])
         if perfect_pairing:
             # Loop over alfa creation
@@ -223,6 +242,7 @@ class tUPSAdaptor:
 
 
     def write_operators(self):
+        """ Write excitation operators to file """
         # Loop over single excitations and double
         self.opmat = np.zeros((self.dim,self.dim,2*(self.nmo-1)))
         self.ops_info = []
