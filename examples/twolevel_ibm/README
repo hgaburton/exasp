@@ -1,0 +1,1 @@
+python ../../exasp/twolevel_ibm.py -fname="path_noiseless.txt" -T 20 -dt 0.5 -wmax=5 -lmax=1 -nshot 200 -repeat=5 -measure_path -noiseless

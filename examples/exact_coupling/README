@@ -1,0 +1,1 @@
+python ../../exasp/exact_coupling.py -mol ch2.xyz -lmax 0.1 -wmax 0.25 --nphoton 1 -pol 0,0,1
