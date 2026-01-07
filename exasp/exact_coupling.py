@@ -2,8 +2,8 @@
 import sys
 import numpy as np
 from scipy.sparse.linalg import eigsh
-from utils.system import MolecularSystem
-from utils.path import SinNPath
+from exasp.utils.system import MolecularSystem
+from exasp.utils.path import SinNPath
 from datetime import datetime
 np.set_printoptions(linewidth=1000,suppress=True,precision=6)
 from argparse import ArgumentParser
