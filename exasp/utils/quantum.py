@@ -86,6 +86,26 @@ def coupling_hamil_terms(hmat, dip_hmat, dse = True):
         Hd_c = 0
     return Hm_c, Hp_c, Hi_c, Hd_c
 
+def coupling_hamil_terms_2photon(hmat, dip_hmat, dse = True):
+    """Generate terms of the system-photon coupling Hamiltonian for the 2-photon case
+    
+    Args:
+        hmat: qubit system Hamiltonian
+        dip_hmat: qubit dipole operator
+        dse:      include dipole self-interaction (True) or not (False). [Default=True]
+    """
+    photon_hmat = SparsePauliOp(['II', 'ZI', 'IZ'], coeffs=[1.5, -1, -0.5])
+    photon_x = SparsePauliOp(['IX', 'XX', 'YY'], coeffs=[1, 0.5, 0.5])
+    Hm_c = (SparsePauliOp('I').tensor(hmat)).simplify()
+    mol_ident = 'I'*hmat.num_qubits 
+    Hp_c = photon_hmat.tensor(SparsePauliOp(mol_ident)).simplify()
+    Hi_c = photon_x.tensor(dip_hmat).simplify()
+    if dse:
+        Hd_c = SparsePauliOp('I').tensor(dip_hmat.dot(dip_hmat)).simplify()
+    else:
+        Hd_c = 0
+    return Hm_c, Hp_c, Hi_c, Hd_c
+
 def coupling_hamil_terms_3qub_hub(U, delta):
     """Generate terms of the system-photon coupling Hamiltonian
     for the 3-qubit representation of the 2-site Hubbard lattice.
