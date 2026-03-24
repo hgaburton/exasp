@@ -93,7 +93,7 @@ if __name__=="__main__":
     dt = args.dt
     n= int(T/dt)
 
-    nqubit = dim[0]*dim[1]*dim[2]*2+1
+    nqubit = dim[0]*dim[1]*dim[2]*2+1 # 3 x 2 for electrons + 1 for photons = 7 total qubits for 1 site, 14 for 2 sites etc.
     # Print details of the calculation
     print()
     print('# Parameters:')
@@ -116,31 +116,33 @@ if __name__=="__main__":
     print(f'#  Noisy simulation     = {noisy}')
     print('# --------------------------------------------------------')
 
-    with open("total.txt","w") as f:
+    with open("total2.txt","w") as f:
         f.write('# --------------------------------------------------------\n')
         f.write(f'#  {"t_k":^14s}   {"<E(t_k)>":^18s} {"<Pn(t_k)>":^12s}   State fidelity -->\n')
         f.write('# --------------------------------------------------------\n')
 
-    with open("projected.txt","w") as f:
+    with open("projected2.txt","w") as f:
         f.write('# --------------------------------------------------------\n')
         f.write(f'#  {"t_k":^14s}   {"<E(t_k)>":^18s} {"<Pn(t_k)>":^12s}   State fidelity -->\n')
         f.write('# --------------------------------------------------------\n')
     sys.stdout.flush()
 
 
-    hamil_terms = quantum.coupling_hamil_terms(hmat_q, dip_hmat_q, args.dse)
+    hamil_terms = quantum.coupling_hamil_terms_2photon(hmat_q, dip_hmat_q, args.dse)
+
+    print(hamil_terms[0].num_qubits)
 
     # Get the vectors to project against
     v = {}
     for j in range(len(einit0)):
-        v[j] = np.kron(np.array([1,0]), vinit[:,init_es[j]])
+        v[j] = np.kron(np.array([1,0,0,0]), vinit[:,init_es[j]])
 
     if(args.ref == ''):
         # Initialise from init_e target
-        vk = np.kron(np.array([0,1]), vinit[:,init_e])
+        vk = np.kron(np.array([0,0,1,0]), vinit[:,init_e])
     else:
         # Initialise from file
-        vk = np.kron(np.array([0,1]), np.genfromtxt(args.ref)+0j)
+        vk = np.kron(np.array([0,0,1,0]), np.genfromtxt(args.ref)+0j)
 
     # Get the initial target statevector
     if trotter:
@@ -187,7 +189,7 @@ if __name__=="__main__":
                 f[j] = np.abs(np.dot(v[j], vk))**2
 
             # Print output
-            with open("total.txt","a") as outF:
+            with open("total2.txt","a") as outF:
                 outF.write(f'  {k: 8.6e}   {Ek: 16.10f}   {Pk: 10.6e}')
                 for j in range(len(einit0)):
                     outF.write(f'{f[j]: 10.6e}')
@@ -220,7 +222,7 @@ if __name__=="__main__":
             for j in range(len(einit0)):
                 pf[j] = np.nan if norm==0 else np.abs(np.dot(v[j], vk_copy))**2
             
-            with open("projected.txt","a") as outF:
+            with open("projected2.txt","a") as outF:
                 outF.write(f'  {k: 8.6e}   {pEk: 16.10f}   {pPk: 10.6e}')
                 for j in range(len(einit0)):
                     outF.write(f'{pf[j]: 10.6e}')

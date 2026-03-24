@@ -96,12 +96,12 @@ def coupling_hamil_terms_2photon(hmat, dip_hmat, dse = True):
     """
     photon_hmat = SparsePauliOp(['II', 'ZI', 'IZ'], coeffs=[1.5, -1, -0.5])
     photon_x = SparsePauliOp(['IX', 'XX', 'YY'], coeffs=[1, 0.5, 0.5])
-    Hm_c = (SparsePauliOp('I').tensor(hmat)).simplify()
+    Hm_c = (SparsePauliOp('II').tensor(hmat)).simplify()
     mol_ident = 'I'*hmat.num_qubits 
     Hp_c = photon_hmat.tensor(SparsePauliOp(mol_ident)).simplify()
     Hi_c = photon_x.tensor(dip_hmat).simplify()
     if dse:
-        Hd_c = SparsePauliOp('I').tensor(dip_hmat.dot(dip_hmat)).simplify()
+        Hd_c = SparsePauliOp('II').tensor(dip_hmat.dot(dip_hmat)).simplify()
     else:
         Hd_c = 0
     return Hm_c, Hp_c, Hi_c, Hd_c
@@ -120,6 +120,21 @@ def coupling_hamil_terms_3qub_hub(U, delta):
     hmat_imu = SparsePauliOp(['IZX', 'ZIX'], coeffs = [-delta, -delta])
     hmat_d = SparsePauliOp(['III', 'ZZI'], coeffs = [2*delta**2, 2*delta**2])
     return hmat_q, hmat_e, hmat_p, hmat_imu, hmat_d
+
+def coupling_hamil_terms_3qub_hub_2photon(U, delta):
+    """Generate terms of the system-photon coupling Hamiltonian
+    for the 3-qubit representation of the 2-site Hubbard lattice, for the 2-photon case.
+
+    Args:
+        U: Hubbard U parameter
+        delta: dipole strength parameter
+    """
+    hmat_q = SparsePauliOp(['II', 'ZZ', 'XI', 'IX'], coeffs=[U/2, U/2, -1, -1])
+    hmat_e = SparsePauliOp(['IIII', 'ZZII', 'XIII', 'IXII'], coeffs=[U/2, U/2, -1, -1])
+    hmat_p = SparsePauliOp(['IIII', 'IIZI', 'IIIZ'], coeffs = [1.5,-1,-0.5])
+    hmat_imu = SparsePauliOp(['IZIX', 'IZXX', 'IZYY','ZIIX', 'ZIXX', 'ZIYY'], coeffs = [-delta, -0.5*delta, -0.5*delta, -delta, -0.5*delta, -0.5*delta])
+    hmat_d = SparsePauliOp(['IIII', 'ZZII'], coeffs = [2*delta**2, 2*delta**2])
+    return hmat_e, hmat_p, hmat_imu, hmat_d
 
 def get_coupled_hamil(h,w,l):
     """Construct coupled Hamiltonian
