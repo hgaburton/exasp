@@ -116,12 +116,12 @@ if __name__=="__main__":
     print(f'#  Noisy simulation     = {noisy}')
     print('# --------------------------------------------------------')
 
-    with open("total2.txt","w") as f:
+    with open("total_diff.txt","w") as f:
         f.write('# --------------------------------------------------------\n')
         f.write(f'#  {"t_k":^14s}   {"<E(t_k)>":^18s} {"<Pn(t_k)>":^12s}   State fidelity -->\n')
         f.write('# --------------------------------------------------------\n')
 
-    with open("projected2.txt","w") as f:
+    with open("projected_diff.txt","w") as f:
         f.write('# --------------------------------------------------------\n')
         f.write(f'#  {"t_k":^14s}   {"<E(t_k)>":^18s} {"<Pn(t_k)>":^12s}   State fidelity -->\n')
         f.write('# --------------------------------------------------------\n')
@@ -189,7 +189,7 @@ if __name__=="__main__":
                 f[j] = np.abs(np.dot(v[j], vk))**2
 
             # Print output
-            with open("total2.txt","a") as outF:
+            with open("total_diff.txt","a") as outF:
                 outF.write(f'  {k: 8.6e}   {Ek: 16.10f}   {Pk: 10.6e}')
                 for j in range(len(einit0)):
                     outF.write(f'{f[j]: 10.6e}')
@@ -222,7 +222,7 @@ if __name__=="__main__":
             for j in range(len(einit0)):
                 pf[j] = np.nan if norm==0 else np.abs(np.dot(v[j], vk_copy))**2
             
-            with open("projected2.txt","a") as outF:
+            with open("projected_diff.txt","a") as outF:
                 outF.write(f'  {k: 8.6e}   {pEk: 16.10f}   {pPk: 10.6e}')
                 for j in range(len(einit0)):
                     outF.write(f'{pf[j]: 10.6e}')
