@@ -105,12 +105,23 @@ class System:
         self.Ip = np.eye(nphoton+1)
         # Raising operator
         self.Ap = np.zeros((nphoton+1,nphoton+1))
+        self.Hp = np.zeros((nphoton+1,nphoton+1))
         for i in range(nphoton):
-            self.Ap[i,i+1] = np.sqrt(i+1)
+            # Version 1 - original
+            self.Ap[i,i+1] = 1
+            # Version 2 - physical
+            #self.Ap[i,i+1] = np.sqrt(i+1)
+        for i in range(nphoton+1):
+            # Hamiltonian
+            self.Hp[i,i] = i
         # Photon x operator
         self.Xp = self.Ap + self.Ap.T
+        # print("Photon Hamiltonian:\n", self.Hp)
+        # print("Photon x operator:\n", self.Xp)
+        # print(self.Ap.T @ self.Ap, self.Hp)
+
         # Photon Hamiltonian
-        self.Hp = self.Ap.T @ self.Ap
+        #self.Hp = self.Ap.T @ self.Ap
 
     def setup_coupling(self):
         """Compute the coupling matrices in direct product basis as sparse matrices"""

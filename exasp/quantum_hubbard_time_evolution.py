@@ -2,7 +2,6 @@
 import sys
 from argparse import ArgumentParser
 from datetime import datetime
-import math
 import numpy as np
 from qiskit.quantum_info import Statevector
 from scipy.sparse.linalg import expm_multiply
@@ -78,16 +77,32 @@ if __name__=="__main__":
     hmat_q, dip_hmat_q = quantum.get_qubit_hamiltonian(hmat, dip_hmat)
     # Find Fock space solution corresponding to molecular ground state
     einit, vinit = np.linalg.eigh(hmat_q)
+
+    # Filter to physical Fock eigenstates (correct alpha and beta electron numbers) before matching
+    nmo = dim[0] * dim[1] * dim[2]
+    alpha_mask = (1 << nmo) - 1
+    n_alpha_basis = np.array([bin(i & alpha_mask).count('1') for i in range(vinit.shape[0])])
+    n_beta_basis  = np.array([bin(i >> nmo).count('1') for i in range(vinit.shape[0])])
+    na_expect = np.array([np.dot(np.abs(vinit[:,i])**2, n_alpha_basis) for i in range(vinit.shape[1])])
+    nb_expect = np.array([np.dot(np.abs(vinit[:,i])**2, n_beta_basis) for i in range(vinit.shape[1])])
+    physical_idx = np.where(
+        (np.abs(na_expect - ne[0]) < 0.5) &
+        (np.abs(nb_expect - ne[1]) < 0.5)
+    )[0]
+
     init_e0 = init_e
-    init_es = {x:-1 for x in range(len(einit0))}
-    for i, e in enumerate(einit):
-        if math.isclose(e,einit0[init_e0]):
-            init_e=i
-        for j in range(len(einit0)):
-            if math.isclose(e,einit0[j]) and init_es[j] == -1:
-                init_es[j] = i
+    init_es = {}
+    used = set()
+    for j in range(len(einit0)):
+        candidates = np.abs(einit[physical_idx] - einit0[j])
+        for rank in np.argsort(candidates):
+            idx = int(physical_idx[rank])
+            if idx not in used:
+                init_es[j] = idx
+                used.add(idx)
                 break
-            
+    init_e = init_es[init_e0]
+
     # Setup propagation parameters
     T=args.T
     dt = args.dt
@@ -143,6 +158,11 @@ if __name__=="__main__":
     else:
         # Initialise from file
         vk = np.kron(np.array([0,0,1,0]), np.genfromtxt(args.ref)+0j)
+
+    ## print(f'# Initial state norm     = {np.linalg.norm(vk):.6f}')
+    ## print(f'# Initial state any NaN  = {np.any(np.isnan(vk))}')
+    ## print(f'# Initial state any inf  = {np.any(np.isinf(vk))}')
+    ## print(f'# Hamiltonian num qubits = {hamil_terms[0].num_qubits}')
 
     # Get the initial target statevector
     if trotter:
