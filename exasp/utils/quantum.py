@@ -95,12 +95,14 @@ def coupling_hamil_terms_2photon(hmat, dip_hmat, dse = True):
         dse:      include dipole self-interaction (True) or not (False). [Default=True]
     """
     photon_hmat = SparsePauliOp(['II', 'ZI', 'IZ'], coeffs=[1.5, -1, -0.5])
+    ## version 1 - artificial / virtual 
     photon_x = SparsePauliOp(['IX', 'XX', 'YY'], coeffs=[1, 0.5, 0.5])
-    photon_x2 = SparsePauliOp(['IX', 'XX', 'ZX', 'YY'], coeffs=[0.5, np.sqrt(2) * 0.5, 0.5, np.sqrt(2) * 0.5])
+    ## version 2 - physical 
+    photon_x2 = SparsePauliOp(['IX', 'XX', 'ZX', 'YY'], coeffs=[(1+np.sqrt(3))*0.5, np.sqrt(2) * 0.5, (1-np.sqrt(3))*0.5, np.sqrt(2) * 0.5])
     Hm_c = (SparsePauliOp('II').tensor(hmat)).simplify()
     mol_ident = 'I'*hmat.num_qubits 
     Hp_c = photon_hmat.tensor(SparsePauliOp(mol_ident)).simplify()
-    Hi_c = photon_x2.tensor(dip_hmat).simplify()
+    Hi_c = photon_x.tensor(dip_hmat).simplify()
     if dse:
         Hd_c = SparsePauliOp('II').tensor(dip_hmat.dot(dip_hmat)).simplify()
     else:
@@ -158,7 +160,7 @@ def trotter_evolve(Hk, vk, dt, order=1):
         order: Trotter expansion order
     """
 
-    if order not in (1,2):
+    if order not in (1, 2):
         raise ValueError(f"Invalid Trotter order {order} requested")
     pf = SuzukiTrotter(2) if order==2 else LieTrotter()
     problem = TimeEvolutionProblem(Hk, initial_state=vk, time=dt)

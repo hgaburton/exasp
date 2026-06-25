@@ -131,12 +131,12 @@ if __name__=="__main__":
     print(f'#  Noisy simulation     = {noisy}')
     print('# --------------------------------------------------------')
 
-    with open("total_diff.txt","w") as f:
+    with open("total_virtual_trotter.txt","w") as f:
         f.write('# --------------------------------------------------------\n')
         f.write(f'#  {"t_k":^14s}   {"<E(t_k)>":^18s} {"<Pn(t_k)>":^12s}   State fidelity -->\n')
         f.write('# --------------------------------------------------------\n')
 
-    with open("projected_diff.txt","w") as f:
+    with open("projected_virtual_trotter.txt","w") as f:
         f.write('# --------------------------------------------------------\n')
         f.write(f'#  {"t_k":^14s}   {"<E(t_k)>":^18s} {"<Pn(t_k)>":^12s}   State fidelity -->\n')
         f.write('# --------------------------------------------------------\n')
@@ -209,7 +209,7 @@ if __name__=="__main__":
                 f[j] = np.abs(np.dot(v[j], vk))**2
 
             # Print output
-            with open("total_diff.txt","a") as outF:
+            with open("total_virtual_trotter.txt","a") as outF:
                 outF.write(f'  {k: 8.6e}   {Ek: 16.10f}   {Pk: 10.6e}')
                 for j in range(len(einit0)):
                     outF.write(f'{f[j]: 10.6e}')
@@ -220,11 +220,13 @@ if __name__=="__main__":
             if trotter: vk_copy = vk_copy.data
 
             # Perform the projection
-            for l in range(len(vk_copy)):
-                if l & 2**(nqubit-1):
-                    vk_copy[l] = 0
+            vk_copy[2**(nqubit-1):] = 0
+            #for l in range(len(vk_copy)):
+            #    print(l, l & 2**(nqubit-1), 2**(nqubit-1))
+            #    if l < nqubit:
+            #        vk_copy[l] = 0
             
-            norm = np.sqrt(sum(abs(x)**2 for x in vk_copy))
+            norm = np.linalg.norm(vk_copy)
             if norm != 0:
                 vk_copy /= norm
 
@@ -242,7 +244,7 @@ if __name__=="__main__":
             for j in range(len(einit0)):
                 pf[j] = np.nan if norm==0 else np.abs(np.dot(v[j], vk_copy))**2
             
-            with open("projected_diff.txt","a") as outF:
+            with open("projected_virtual_trotter.txt","a") as outF:
                 outF.write(f'  {k: 8.6e}   {pEk: 16.10f}   {pPk: 10.6e}')
                 for j in range(len(einit0)):
                     outF.write(f'{pf[j]: 10.6e}')
