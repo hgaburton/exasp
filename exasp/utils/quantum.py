@@ -160,13 +160,25 @@ def trotter_evolve(Hk, vk, dt, order=1):
         order: Trotter expansion order
     """
 
-    if order not in (1, 2):
+    if order not in (1,2):
         raise ValueError(f"Invalid Trotter order {order} requested")
     pf = SuzukiTrotter(2) if order==2 else LieTrotter()
     problem = TimeEvolutionProblem(Hk, initial_state=vk, time=dt)
     trotter = TrotterQRTE(product_formula=pf,num_timesteps=1)
     result = trotter.evolve(problem)
-    vk = Statevector(result.evolved_state)
+
+    # OLD approach: extract statevector by simulating the full output circuit.
+    #   ValueError: Input matrix is not unitary
+    # vk = Statevector(result.evolved_state).data
+
+    # Extract the PauliEvolutionGate (data[0] is the state-prep instruction, skip it).
+    # Transpile to decompose PauliEvolutionGate into basic rotation gates so that
+    # Statevector.evolve() applies the Trotter approximation, not exact exponentiation.
+    trotter_circuit = result.evolved_state.copy_empty_like()
+    for inst in result.evolved_state.data[1:]:
+        trotter_circuit.append(inst)
+    trotter_circuit = transpile(trotter_circuit, optimization_level=0)
+    vk = vk.evolve(trotter_circuit)
     return vk
 
 def  trotter_evolve_noisy_dm(path, nsteps, nqubits, hamil_terms, dt, vk, order=1):
