@@ -17,6 +17,9 @@ if __name__ == "__main__":
     parser.add_argument("-pol",dest="eps",default='0,0,1',type=str,help="Polarisation vector in (x,y,z) format. [default=0,0,1]")
     parser.add_argument("-n",dest="ngrid",default=101,type=int,help="Number of grid points to consider [default-101]")
     parser.add_argument('--nphoton',dest='nphoton',default=1,type=int,help="Maximum number of allowed photons [default=1]")
+    parser.add_argument('--nfrozen',dest='nfrozen',default=None,type=int,help="Number of frozen orbitals [default=None]")
+    parser.add_argument('--nactive',dest='nactive',default=None,type=int,help="Number of active orbitals [default=None]")
+    parser.add_argument('--mo_coeff',dest='mo_coeff',default=None,type=str,help="MO coefficients file [default=None]")
     parser.add_argument("-o",dest="order",default=3,type=float,help="Power order of the sin function for lambda path [default=3]")
     args = parser.parse_args()
 
@@ -31,7 +34,8 @@ if __name__ == "__main__":
     eps = list(map(float,args.eps.split(',')))
 
     # Setup the EXASP system
-    system = MolecularSystem(args.xyzfile,args.basis,args.nphoton,eps)
+    system = MolecularSystem(args.xyzfile,args.basis,args.nphoton,eps,nfrozen=args.nfrozen,nactive=args.nactive,
+                             mo_coeff=np.genfromtxt(args.mo_coeff) if args.mo_coeff is not None else None)
 
     # Set up the path definition
     path = SinNPath(args.wmax,args.lmax,args.order)

@@ -4,6 +4,7 @@ from scipy.sparse import csc_matrix
 import quantel
 from quantel.wfn.rhf import RHF
 from quantel.opt.diis import DIIS
+from quantel.opt.lbfgs import LBFGS
 from quantel.utils.linalg import orthogonalise
 
 class System:
@@ -59,6 +60,7 @@ class System:
             self.wfn.get_orbital_guess("gwh")
             DIIS().run(self.wfn, plev=0)
             self.coeff = self.wfn.mo_coeff.copy()
+
         else:
             # Check the dimensions of input coefficients
             (nr,nc) = coeff.shape
@@ -68,7 +70,7 @@ class System:
 
             # Orthogonalise input coefficients
             self.coeff = orthogonalise(coeff, self.ints.overlap_matrix())
-
+        np.savetxt("mo_coeff.txt", self.coeff, fmt="%14.8f")
         # Update integrals
         self.setup_integrals()
         # Setup photon matrices
@@ -153,6 +155,7 @@ class System:
             return dw * dHw + dl * dHl
         else:
             return dw * dHw
+
 
 
 class MolecularSystem(System):
