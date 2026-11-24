@@ -1,0 +1,2 @@
+#      s        <E>_total      <E>_postselect       <N>_photon        Var(E)_total   Var(E)_postselect   Var(N)_photon
+  1.000000     4.7654765477      4.8367783321      0.0352035204       0.0176701141      0.0173447610      0.0018917604
